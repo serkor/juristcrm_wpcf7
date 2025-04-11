@@ -27,7 +27,7 @@ add_action('admin_init', function () {
     }
 });
 
-//// Страница настроек
+// Страница настроек
 //add_action('admin_menu', function () {
 //    add_menu_page(
 //        'JuristCRM Settings',
@@ -42,7 +42,7 @@ add_action('admin_init', function () {
 add_action('admin_menu', function () {
     if (is_plugin_active('contact-form-7/wp-contact-form-7.php')) {
         add_submenu_page(
-            'wpcf7', // Это правильный слаг Contact Form 7
+            'wpcf7',
             'JuristCRM Integration',
             'JuristCRM',
             'manage_options',
