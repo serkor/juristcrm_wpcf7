@@ -27,17 +27,6 @@ add_action('admin_init', function () {
     }
 });
 
-// Страница настроек
-//add_action('admin_menu', function () {
-//    add_menu_page(
-//        'JuristCRM Settings',
-//        'JuristCRM',
-//        'manage_options',
-//        'juristcrm-settings',
-//        'juristcrm_settings_page'
-//    );
-//});
-
 // Добавление в меню CF7
 add_action('admin_menu', function () {
     if (is_plugin_active('contact-form-7/wp-contact-form-7.php')) {
@@ -137,7 +126,7 @@ function juristcrm_cf7_settings_page()
         }
 
         .wp-admin-column {
-            width: 48%; /* Это аналогично col-6 */
+            width: 48%;
         }
     </style>
 
@@ -169,11 +158,20 @@ function juristcrm_advanced_send($contact_form, &$abort, $submission)
     }
 
     $data = $submission->get_posted_data();
+    error_log("POSTED DATA: " . print_r($data, true));
     $crm_data = [];
 
     foreach ($map as $crmField => $formField) {
-        if (isset($data[$formField])) {
-            $crm_data[$crmField] = sanitize_text_field($data[$formField]);
+        if (is_string($formField) && isset($data[$formField])) {
+            $value = $data[$formField];
+
+            if (is_array($value)) {
+                $value = reset($value);
+            }
+
+            $crm_data[$crmField] = sanitize_text_field($value);
+        } elseif (!is_array($formField) && !is_object($formField)) {
+            $crm_data[$crmField] = $formField;
         }
     }
 
@@ -187,5 +185,6 @@ function juristcrm_advanced_send($contact_form, &$abort, $submission)
     ));
 
     $response = curl_exec($curl);
+    error_log("RESPONSE FROM CRM: " . $response);
     curl_close($curl);
 }
