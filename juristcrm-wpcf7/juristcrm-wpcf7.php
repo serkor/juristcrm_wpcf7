@@ -63,41 +63,44 @@ function juristcrm_cf7_settings_page()
             settings_fields('juristcrm-settings-group');
             do_settings_sections('juristcrm-settings-group');
             ?>
-            <div class="col-6">
-                <table class="form-table">
-                    <tr valign="top">
-                        <th scope="row">URL CRM</th>
-                        <td><input type="text" name="juristcrm_url" value="<?php
-                            echo esc_attr(get_option('juristcrm_url')); ?>" size="50"/><br/>
-                            <small>For example: https://company.juristcrm.com</small>
-                        </td>
-                    </tr>
-                    <tr valign="top">
-                        <th scope="row">API key</th>
-                        <td><input type="text" name="juristcrm_api_key" value="<?php
-                            echo esc_attr(get_option('juristcrm_api_key')); ?>" size="50"/><br/>
-                            <small>For example: 5ClaGZ36qP2U437BtGyJP6At8LfMR9VmMLWW0T7i8YgjXaOFhy2zHeodwy89</small>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-            <div class="col-6">
-                <div>
-                    <b>JuristCRM Parameters and Values</b> -
-                    <a href="<?php
-                    echo esc_attr(get_option('juristcrm_url')).'/crm#/doc/api-appeals'; ?>" target="_blank">see in
-                        Documentation</a>
-                    <ul>
-                        <li>title(VARCHAR, max:50) - Last Name, First Name (Required)</li>
-                        <li>phone_1(VARCHAR, max:20) - Phone (Required)</li>
-                        <li>email(VARCHAR, max:20) - Email (Optional)</li>
-                        <li>info(TEXT, max:600) - Problem/Question (Optional)</li>
-                        <li>organization_id(INT, max:2) - Organization ID (Optional)</li>
-                        <li>region_id(INT, max:2) - Region ID (Optional)</li>
-                        <li>lawyer_id(INT, max:20) - Lawyer (Employee ID) (Optional)</li>
-                        <li>operator_id(INT, max:20) - Operator (Employee ID) (Optional)</li>
-                        <li>important(INT, max:1) - Important (1) - Not important (0) (Optional)</li>
-                    </ul>
+            <div class="wp-admin-columns">
+                <div class="wp-admin-column">
+                    <table class="form-table">
+                        <tr valign="top">
+                            <th scope="row">URL CRM</th>
+                            <td><input type="text" name="juristcrm_url" value="<?php
+                                echo esc_attr(get_option('juristcrm_url')); ?>" size="50"/><br/>
+                                <small>For example: https://company.juristcrm.com</small>
+                            </td>
+                        </tr>
+                        <tr valign="top">
+                            <th scope="row">API key</th>
+                            <td><input type="text" name="juristcrm_api_key" value="<?php
+                                echo esc_attr(get_option('juristcrm_api_key')); ?>" size="50"/><br/>
+                                <small>For example:
+                                    5ClaGZ36qP2U437BtGyJP6At8LfMR9VmMLWW0T7i8YgjXaOFhy2zHeodwy89</small>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="wp-admin-column">
+                    <div>
+                        <b>JuristCRM Parameters and Values</b> -
+                        <a href="<?php
+                        echo esc_attr(get_option('juristcrm_url')).'/crm#/doc/api-appeals'; ?>" target="_blank">see
+                            in Documentation</a>
+                        <ul>
+                            <li>1) <b>title</b> (VARCHAR, max:50) - Last Name, First Name (Required)</li>
+                            <li>2) <b>phone_1</b> (VARCHAR, max:20) - Phone (Required)</li>
+                            <li>3) <b>email</b> (VARCHAR, max:20) - Email (Optional)</li>
+                            <li>4) <b>info</b> (TEXT, max:600) - Problem/Question (Optional)</li>
+                            <li>5) <b>organization_id</b> (INT, max:2) - Organization ID (Optional)</li>
+                            <li>6) <b>region_id</b> (INT, max:2) - Region ID (Optional)</li>
+                            <li>7) <b>lawyer_id</b> (INT, max:20) - Lawyer (Employee ID) (Optional)</li>
+                            <li>8) <b>operator_id</b> (INT, max:20) - Operator (Employee ID) (Optional)</li>
+                            <li>9) <b>important</b> (INT, max:1) - Important (1) - Not important (0) (Optional)</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
             <hr>
@@ -110,7 +113,7 @@ function juristcrm_cf7_settings_page()
                 $saved_map = get_option($option_key);
                 ?>
                 <h3><?php
-                    echo 'Your form: ' . esc_html($form_title); ?> (ID: <?php
+                    echo 'Your form: '.esc_html($form_title); ?> (ID: <?php
                     echo $form_id; ?>)</h3>
                 <textarea name="<?php
                 echo $option_key; ?>" rows="2" cols="100"><?php
@@ -125,6 +128,19 @@ function juristcrm_cf7_settings_page()
             submit_button(); ?>
         </form>
     </div>
+
+    <style>
+        .wp-admin-columns {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .wp-admin-column {
+            width: 48%; /* Это аналогично col-6 */
+        }
+    </style>
+
     <?php
 }
 
