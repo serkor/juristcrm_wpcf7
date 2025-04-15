@@ -6,10 +6,10 @@
 
 /*
 Plugin Name: JuristCRM: Contact Form 7
-Plugin URI: https://juristcrm.com/opportunities/restapi
+Plugin URI: https://github.com/serkor/juristcrm_wpcf7/releases
 Description: Extended integration of JuristCRM with Contact Form 7. Allows you to customize the field mapping individually for each Contact Form 7.
 Author: SERKOR
-Version: 1.0.1
+Version: 1.0.2
 Author URI: https://github.com/serkor
 */
 
@@ -46,7 +46,7 @@ function juristcrm_cf7_settings_page()
     $forms = WPCF7_ContactForm::find();
     ?>
     <div class="wrap">
-        <h1>Integration settings with JuristCRM</h1>
+        <h1>Настройки интеграции с JuristCRM</h1>
         <form method="post" action="options.php">
             <?php
             settings_fields('juristcrm-settings-group');
@@ -74,26 +74,28 @@ function juristcrm_cf7_settings_page()
                 </div>
                 <div class="wp-admin-column">
                     <div>
-                        <b>JuristCRM Parameters and Values</b> -
+                        <b>Параметры и значения</b> -
                         <a href="<?php
-                        echo esc_attr(get_option('juristcrm_url')).'/crm#/doc/api-appeals'; ?>" target="_blank">see
-                            in Documentation</a>
+                        echo esc_attr(get_option('juristcrm_url')).'/crm#/doc/api-appeals'; ?>" target="_blank">
+                            см. в документации</a>
                         <ul>
-                            <li>1) <b>title</b> (VARCHAR, max:50) - Last Name, First Name (Required)</li>
-                            <li>2) <b>phone_1</b> (VARCHAR, max:20) - Phone (Required)</li>
-                            <li>3) <b>email</b> (VARCHAR, max:20) - Email (Optional)</li>
-                            <li>4) <b>info</b> (TEXT, max:600) - Problem/Question (Optional)</li>
-                            <li>5) <b>organization_id</b> (INT, max:2) - Organization ID (Optional)</li>
-                            <li>6) <b>region_id</b> (INT, max:2) - Region ID (Optional)</li>
-                            <li>7) <b>lawyer_id</b> (INT, max:20) - Lawyer (Employee ID) (Optional)</li>
-                            <li>8) <b>operator_id</b> (INT, max:20) - Operator (Employee ID) (Optional)</li>
-                            <li>9) <b>important</b> (INT, max:1) - Important (1) - Not important (0) (Optional)</li>
+                            <li>1) <b>title</b> (VARCHAR, max:30) - Фамилия, Имя (обязательно)</li>
+                            <li>2) <b>phone_1</b> (VARCHAR, max:16) - Телефон (обязательно)</li>
+                            <li>3) <b>email</b> (VARCHAR, max:30) - Email (Не обязательно)</li>
+                            <li>4) <b>info</b> (TEXT, max:600) - Проблема/Вопрос (Не обязательно)</li>
+                            <li>4) <b>note</b> (VARCHAR, max:191) - Примечание/URL-адрес сайта (Не обязательно)</li>
+                            <li>5) <b>organization_id</b> (INT, max:2) - ID организации (Не обязательно)</li>
+                            <li>6) <b>region_id</b> (INT, max:2) - ID региона (Не обязательно)</li>
+                            <li>7) <b>lawyer_id</b> (INT, max:5) - ID юриста (Не обязательно)</li>
+                            <li>8) <b>operator_id</b> (INT, max:5) - ID оператора (Не обязательно)</li>
+                            <li>9) <b>important</b> (INT, max:1) - Важное (1) - Не важное (0) (Не обязательно)
+                            </li>
                         </ul>
                     </div>
                 </div>
             </div>
             <hr>
-            <h2>Customizing forms</h2>
+            <h2>Настройка форм</h2>
             <?php
             foreach ($forms as $form):
                 $form_id = $form->id();
@@ -101,13 +103,13 @@ function juristcrm_cf7_settings_page()
                 $option_key = "juristcrm_field_map_form_$form_id";
                 $saved_map = get_option($option_key);
                 ?>
-                <h3><?php
-                    echo 'Your form: '.esc_html($form_title); ?> (ID: <?php
-                    echo $form_id; ?>)</h3>
+                <h5><?php
+                    echo 'Ваша форма: '.esc_html($form_title); ?> (ID: <?php
+                    echo $form_id; ?>)</h5>
                 <textarea name="<?php
                 echo $option_key; ?>" rows="2" cols="100"><?php
                     echo esc_textarea($saved_map); ?></textarea>
-                <br><small>For example (JSON): { "title":"your-name", "email":"your-email", "phone_1":"your-phone",
+                <br><small>Например (JSON): { "title":"your-name", "email":"your-email", "phone_1":"your-phone",
                 "info":"your-message" }</small>
                 <hr>
             <?php
@@ -158,7 +160,7 @@ function juristcrm_advanced_send($contact_form, &$abort, $submission)
     }
 
     $data = $submission->get_posted_data();
-    error_log("POSTED DATA: " . print_r($data, true));
+    error_log("POSTED DATA: ".print_r($data, true));
     $crm_data = [];
 
     foreach ($map as $crmField => $formField) {
@@ -185,6 +187,6 @@ function juristcrm_advanced_send($contact_form, &$abort, $submission)
     ));
 
     $response = curl_exec($curl);
-    error_log("RESPONSE FROM CRM: " . $response);
+    error_log("RESPONSE FROM CRM: ".$response);
     curl_close($curl);
 }
