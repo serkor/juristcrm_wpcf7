@@ -22,7 +22,7 @@ include_once(ABSPATH.'wp-admin/includes/plugin.php');
 add_action('admin_init', function () {
     if (!is_plugin_active('contact-form-7/wp-contact-form-7.php')) {
         add_action('admin_notices', function () {
-            echo '<div class="notice notice-error"><p><strong>JuristCRM:</strong> To work, you need the Contact Form 7 plugin installed.</p></div>';
+            echo '<div class="notice notice-error"><p><strong>JuristCRM:</strong> Для работы вам необходимо установить плагин Contact Form 7.</p></div>';
         });
     }
 });
@@ -46,7 +46,7 @@ function juristcrm_cf7_settings_page()
     $forms = WPCF7_ContactForm::find();
     ?>
     <div class="wrap">
-        <h1>Настройки интеграции с JuristCRM</h1>
+        <h1>Настройки интеграции ваших форм с JuristCRM</h1>
         <form method="post" action="options.php">
             <?php
             settings_fields('juristcrm-settings-group');
@@ -59,25 +59,26 @@ function juristcrm_cf7_settings_page()
                             <th scope="row">URL CRM</th>
                             <td><input type="text" name="juristcrm_url" value="<?php
                                 echo esc_attr(get_option('juristcrm_url')); ?>" size="50"/><br/>
-                                <small>For example: https://company.juristcrm.com</small>
+                                <small>Например: https://company.juristcrm.com</small>
                             </td>
                         </tr>
                         <tr valign="top">
-                            <th scope="row">API key</th>
+                            <th scope="row">API KEY</th>
                             <td><input type="text" name="juristcrm_api_key" value="<?php
-                                echo esc_attr(get_option('juristcrm_api_key')); ?>" size="50"/><br/>
-                                <small>For example:
-                                    5ClaGZ36qP2U437BtGyJP6At8LfMR9VmMLWW0T7i8YgjXaOFhy2zHeodwy89</small>
+                                echo esc_attr(get_option('juristcrm_api_key')); ?>" size="80"/><br/>
+                                <small>Например:
+                                    5ClaGZ36qP2U437BtGyJP6At8LfMR9VmMLWW0T7i8YgjXaOFhy2zHeodwy89</small><br/>
+                                <small>* Узнать свой API KEY можно в настройках CRM (Система->Налаштування)</small>
                             </td>
                         </tr>
                     </table>
                 </div>
                 <div class="wp-admin-column">
                     <div>
-                        <b>Параметры и значения</b> -
+                        <b>Параметры и значения для отправки форм в CRM</b> -
                         <a href="<?php
                         echo esc_attr(get_option('juristcrm_url')).'/crm#/doc/api-appeals'; ?>" target="_blank">
-                            см. в документации</a>
+                            см. в документации детально</a>
                         <ul>
                             <li>1) <b>title</b> (VARCHAR, max:30) - Фамилия, Имя (обязательно)</li>
                             <li>2) <b>phone_1</b> (VARCHAR, max:16) - Телефон (обязательно)</li>
@@ -86,8 +87,8 @@ function juristcrm_cf7_settings_page()
                             <li>4) <b>note</b> (VARCHAR, max:191) - Примечание/URL-адрес сайта (Не обязательно)</li>
                             <li>5) <b>organization_id</b> (INT, max:2) - ID организации (Не обязательно)</li>
                             <li>6) <b>region_id</b> (INT, max:2) - ID региона (Не обязательно)</li>
-                            <li>7) <b>lawyer_id</b> (INT, max:5) - ID юриста (Не обязательно)</li>
-                            <li>8) <b>operator_id</b> (INT, max:5) - ID оператора (Не обязательно)</li>
+                            <li>7) <b>lawyer_id</b> (INT, max:5) - ID сотрудника (Не обязательно)</li>
+                            <li>8) <b>operator_id</b> (INT, max:5) - ID сотрудника (Не обязательно)</li>
                             <li>9) <b>important</b> (INT, max:1) - Важное (1) - Не важное (0) (Не обязательно)
                             </li>
                         </ul>
@@ -95,7 +96,7 @@ function juristcrm_cf7_settings_page()
                 </div>
             </div>
             <hr>
-            <h2>Настройка форм</h2>
+            <h2>Настройка форм (Синтакси JSON)</h2>
             <?php
             foreach ($forms as $form):
                 $form_id = $form->id();
@@ -110,7 +111,7 @@ function juristcrm_cf7_settings_page()
                 echo $option_key; ?>" rows="2" cols="100"><?php
                     echo esc_textarea($saved_map); ?></textarea>
                 <br><small>Например (JSON): { "title":"your-name", "email":"your-email", "phone_1":"your-phone",
-                "info":"your-message" }</small>
+                "info":"your-message","note":"yoursite.com" }</small>
                 <hr>
             <?php
             endforeach; ?>
