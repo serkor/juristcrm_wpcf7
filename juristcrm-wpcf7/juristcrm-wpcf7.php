@@ -8,7 +8,7 @@
 Plugin Name: JuristCRM: Contact Form 7
 Plugin URI: https://github.com/serkor/juristcrm_wpcf7/releases
 Description: Extended integration of JuristCRM with Contact Form 7. Allows you to customize the field mapping individually for each Contact Form 7.
-Author: SERKOR
+Author: Sergey Korolkov (JuristCRM)
 Version: 1.0.4
 Author URI: https://github.com/serkor
 */
@@ -120,7 +120,9 @@ function juristcrm_cf7_settings_page()
                             <li>-><b>state_id</b> (INT, max:10) - Стан (Не обов'язково)
                             <li>-><b>start</b> (VARCHAR, max:20, format: 2023-09-12 11:00) - Дата запису (Не
                                 обов'язково)
-                            <li>-><b>utms</b> UTM мітки відправляються автоматично, якщо є в параметрах URL</li>
+                            <li>-><b>utms</b> UTM мітки відправляються автоматично, якщо є в параметрах URL (Якщо
+                                увімкнено redirect сторінки, потрібно налаштувати затримку 2-3 сек.)
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -141,7 +143,7 @@ function juristcrm_cf7_settings_page()
                 echo $option_key; ?>" rows="2" cols="100"><?php
                     echo esc_textarea($saved_map); ?></textarea>
                 <br><small>Наприклад (JSON): { "title":"your-name", "email":"your-email", "phone_1":"your-phone",
-                "info":"your-message","note":"yoursite.com" }</small>
+                "info":"your-message","note":"yoursite.com", "organization_id":"1", "operator_id":"2", }</small>
                 <hr>
             <?php
             endforeach; ?>
