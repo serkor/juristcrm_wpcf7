@@ -1,7 +1,7 @@
 <?php
 /**
  * @package JuristCRM
- * @version 1.0.3
+ * @version 1.0.4
  */
 
 /*
@@ -42,6 +42,7 @@ add_action('admin_menu', function () {
     }
 });
 
+// Сбор меток UTM
 add_action('init', function () {
     $utm_keys = ['source', 'medium', 'campaign', 'term', 'content'];
 
