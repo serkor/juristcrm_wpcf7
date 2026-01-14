@@ -9,7 +9,7 @@ Plugin Name: JuristCRM: Contact Form 7
 Plugin URI: https://github.com/serkor/juristcrm_wpcf7/releases
 Description: Extended integration of JuristCRM with Contact Form 7. Allows you to customize the field mapping individually for each Contact Form 7.
 Author: SERKOR
-Version: 1.0.3
+Version: 1.0.4
 Author URI: https://github.com/serkor
 */
 
@@ -39,6 +39,26 @@ add_action('admin_menu', function () {
                 'juristcrm-cf7',
                 'juristcrm_cf7_settings_page'
         );
+    }
+});
+
+add_action('init', function () {
+    $utm_keys = ['source', 'medium', 'campaign', 'term', 'content'];
+
+    foreach ($utm_keys as $key) {
+        $param = 'utm_'.$key;
+
+        if (!empty($_GET[$param])) {
+            setcookie(
+                    'juristcrm_'.$param,
+                    sanitize_text_field($_GET[$param]),
+                    time() + 60 * 60 * 24 * 30, // 30 дней
+                    COOKIEPATH ?: '/',
+                    COOKIE_DOMAIN
+            );
+
+            $_COOKIE['juristcrm_'.$param] = sanitize_text_field($_GET[$param]);
+        }
     }
 });
 
@@ -99,13 +119,7 @@ function juristcrm_cf7_settings_page()
                             <li>-><b>state_id</b> (INT, max:10) - Стан (Не обов'язково)
                             <li>-><b>start</b> (VARCHAR, max:20, format: 2023-09-12 11:00) - Дата запису (Не
                                 обов'язково)
-                            <li>-><b>utms[source]</b> (VARCHAR, max:50) - Джерело трафіку (Не обов'язково)
-                            <li>-><b>utms[medium]</b> (VARCHAR, max:50) - Тип реклами: cpc, banner, email (Не
-                                обов'язково)
-                            <li>-><b>utms[campaign]</b> (VARCHAR, max:50) - Назва кампанії (Не обов'язково)
-                            <li>-><b>utms[term]</b> (VARCHAR, max:50) - Ключове слово (Не обов'язково)
-                            <li>-><b>utms[content]</b> (VARCHAR, max:50) - Оголошення (Не обов'язково)
-                            </li>
+                            <li>-><b>utms</b> UTM мітки відправляються автоматично, якщо є в параметрах URL</li>
                         </ul>
                     </div>
                 </div>
@@ -191,6 +205,22 @@ function juristcrm_advanced_send($contact_form, &$abort, $submission)
         } elseif (!is_array($formField) && !is_object($formField)) {
             $crm_data[$crmField] = $formField;
         }
+    }
+
+    // --- UTM метки ---
+    $utm_keys = ['source', 'medium', 'campaign', 'term', 'content'];
+    $utms = [];
+
+    foreach ($utm_keys as $key) {
+        $cookie_key = 'juristcrm_utm_'.$key;
+
+        if (!empty($_COOKIE[$cookie_key])) {
+            $utms[$key] = sanitize_text_field($_COOKIE[$cookie_key]);
+        }
+    }
+
+    if (!empty($utms)) {
+        $crm_data['utms'] = $utms;
     }
 
     $curl = curl_init();
