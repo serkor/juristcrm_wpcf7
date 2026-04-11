@@ -1,7 +1,7 @@
 <?php
 /**
  * @package JuristCRM
- * @version 1.0.5
+ * @version 1.0.6
  */
 
 /*
@@ -9,7 +9,7 @@ Plugin Name: JuristCRM: Contact Form 7
 Plugin URI: https://github.com/serkor/juristcrm_wpcf7/releases
 Description: Extended integration of JuristCRM with Contact Form 7. Allows you to customize the field mapping individually for each Contact Form 7.
 Author: Sergey Korolkov (JuristCRM)
-Version: 1.0.5
+Version: 1.0.6
 Author URI: https://github.com/serkor
 */
 
@@ -44,9 +44,17 @@ add_action('admin_menu', function () {
 
 // Сбор меток UTM
 add_action('init', function () {
-    $utm_keys = ['source', 'medium', 'campaign', 'term', 'content'];
-    foreach ($utm_keys as $key) {
-        $param = 'utm_'.$key;
+    $tracking_params = [
+            'source' => 'utm_source',
+            'medium' => 'utm_medium',
+            'campaign' => 'utm_campaign',
+            'term' => 'utm_term',
+            'content' => 'utm_content',
+            'fbclid' => 'fbclid',
+            'gclid' => 'gclid',
+    ];
+
+    foreach ($tracking_params as $key => $param) {
         if (isset($_GET[$param]) && $_GET[$param] !== '') {
             $value = sanitize_text_field($_GET[$param]);
             setcookie('juristcrm_utm_'.$key, $value, time() + 30 * DAY_IN_SECONDS, '/', '', false, false);
@@ -203,7 +211,7 @@ function juristcrm_advanced_send($contact_form, &$abort, $submission)
     }
 
     // --- UTM метки ---
-    $utm_keys = ['source', 'medium', 'campaign', 'term', 'content'];
+    $utm_keys = ['source', 'medium', 'campaign', 'term', 'content', 'fbclid', 'gclid'];
     $utms = [];
     foreach ($utm_keys as $key) {
         $cookie_key = 'juristcrm_utm_'.$key;
@@ -211,6 +219,7 @@ function juristcrm_advanced_send($contact_form, &$abort, $submission)
             $utms[$key] = sanitize_text_field($_COOKIE[$cookie_key]);
         }
     }
+
     if (!empty($utms)) {
         $crm_data['utms'] = $utms;
     }
