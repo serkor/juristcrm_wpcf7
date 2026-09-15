@@ -1,7 +1,7 @@
 <?php
 /**
  * @package JuristCRM
- * @version 1.0.6
+ * @version 1.0.7
  */
 
 /*
@@ -9,7 +9,7 @@ Plugin Name: JuristCRM: Contact Form 7
 Plugin URI: https://github.com/serkor/juristcrm_wpcf7/releases
 Description: Extended integration of JuristCRM with Contact Form 7. Allows you to customize the field mapping individually for each Contact Form 7.
 Author: Sergey Korolkov (JuristCRM)
-Version: 1.0.6
+Version: 1.0.7
 Author URI: https://github.com/serkor
 */
 
@@ -111,7 +111,7 @@ function juristcrm_cf7_settings_page()
                             <li>-><b>info</b> (TEXT, max:600) - Проблема/Питання (Не обов'язково)</li>
                             <li>-><b>note</b> (VARCHAR, max:191) - Нотатка/URL сайту (Не обов'язково)</li>
                             <li>-><b>organization_id</b> (INT, max:2) - ID организации (Не обов'язково)</li>
-                            <li>-><b>region_id</b> (INT, max:2) - ID региона (Не обов'язково)</li>
+<!--                            <li>-><b>region_id</b> (INT, max:2) - ID региона (Не обов'язково)</li>-->
                             <li>-><b>lawyer_id</b> (INT, max:5) - Юрист (Співробітник ID) (Не обов'язково)</li>
                             <li>-><b>operator_id</b> (INT, max:5) - Оператор (Співробітник ID) (Не обов'язково)</li>
                             <li>-><b>important</b> (INT, max:1) - Важливо (1) - Не важливо (0) (Не обов'язково)
